@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <menuitem
+        id="menu_National_Registration_root"
+        name="National Id Reg"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_National_Registration_main"
+        name="ID"
+        parent="menu_National_Registration_root"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_National_Registration"
+        name="ID Reg"
+        parent="menu_National_Registration_main"
+        action="action_National_Registration_main"
+        sequence="10"
+    />
+
+</odoo>

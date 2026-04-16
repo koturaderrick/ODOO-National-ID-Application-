@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_national_id_list" model="ir.ui.view">
+        <field name="name">national.id.list</field>
+        <field name="model">national.id</field>
+        <field name="arch" type="xml">
+            <list string="National IDs">
+                <field name="name"/>
+                <field name="id_number"/>
+                <field name="district"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_national_id_form" model="ir.ui.view">
+        <field name="name">national.id.form</field>
+        <field name="model">national.id</field>
+        <field name="arch" type="xml">
+            <form string="National ID">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="id_number"/>
+                        <field name="date_of_birth"/>
+                        <field name="district"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_National_Registration_main" model="ir.actions.act_window">
+        <field name="name">National ID Registrations</field>
+        <field name="res_model">national.id</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

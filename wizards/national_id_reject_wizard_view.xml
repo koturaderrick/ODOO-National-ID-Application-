@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_national_id_reject_wizard" model="ir.ui.view">
+        <field name="name">national.id.reject.wizard.form</field>
+        <field name="model">national.id.reject.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reject Application">
+                <group>
+                    <field name="national_id_id" invisible="1"/>
+                    <field name="rejection_reason" placeholder="Enter reason for rejection..." required="1"/>
+                </group>
+                <footer>
+                    <button name="action_confirm_reject" string="Confirm Rejection" type="object" class="btn-danger"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

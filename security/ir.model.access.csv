@@ -1,2 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_national_id,national.id,model_national_id,,1,1,1,1
+access_national_id_user,national.id.user,model_national_id,base.group_user,1,1,1,1
+access_national_id_public,national.id.public,model_national_id,base.group_public,1,1,1,0

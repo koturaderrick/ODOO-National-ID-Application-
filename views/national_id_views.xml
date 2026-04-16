@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- Sequence -->
     <record id="seq_national_id" model="ir.sequence">
         <field name="name">National ID Application Sequence</field>
         <field name="code">national.id.seq</field>
@@ -8,6 +9,7 @@
         <field name="padding">6</field>
     </record>
 
+    <!-- List View -->
     <record id="view_national_id_list" model="ir.ui.view">
         <field name="name">national.id.list</field>
         <field name="model">national.id</field>
@@ -18,11 +20,17 @@
                 <field name="sex"/>
                 <field name="date_of_birth"/>
                 <field name="district"/>
-                <field name="state" widget="badge"/>
+                <field name="mobile_number"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state in ['stage1','stage2']"
+                       decoration-success="state == 'approved'"
+                       decoration-danger="state == 'rejected'"/>
             </list>
         </field>
     </record>
 
+    <!-- Form View -->
     <record id="view_national_id_form" model="ir.ui.view">
         <field name="name">national.id.form</field>
         <field name="model">national.id</field>
@@ -36,13 +44,13 @@
                             invisible="state not in ['draft']"/>
 
                     <button name="action_verify_documents"
-                            string="Stage 1 Verify"
+                            string="Stage 1: Verify &amp; Approve"
                             type="object"
                             class="btn-warning"
                             invisible="state != 'stage1'"/>
 
                     <button name="action_final_approve"
-                            string="Stage 2 Final Approve"
+                            string="Stage 2: Final Approve"
                             type="object"
                             class="btn-success"
                             invisible="state != 'stage2'"/>
@@ -51,43 +59,44 @@
                             string="Reject"
                             type="object"
                             class="btn-danger"
-                            invisible="state in ['approved', 'rejected']"/>
+                            invisible="state in ['approved', 'rejected', 'draft']"/>
 
                     <button name="action_reset_to_draft"
-                            string="Reset"
+                            string="Reset to Draft"
                             type="object"
                             class="btn-secondary"
                             invisible="state != 'rejected'"/>
 
-                    <field name="state" widget="statusbar"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,stage1,stage2,approved"/>
                 </header>
 
                 <sheet>
+                    <div class="oe_title">
+                        <h1><field name="full_name" readonly="1"/></h1>
+                        <h4><field name="id_number" readonly="1"/></h4>
+                    </div>
+
                     <group>
                         <group string="Personal Information">
-                            <field name="id_number" readonly="1"/>
                             <field name="surname" required="1"/>
                             <field name="given_name" required="1"/>
-                            <field name="other_names"/>
-                            <field name="full_name" readonly="1"/>
                             <field name="date_of_birth" required="1"/>
                             <field name="sex" required="1"/>
-                            <field name="mobile_number" required="1"/>
-                            <field name="email"/>
+                            <field name="citizenship_type" required="1"/>
                         </group>
-                        <group string="Address and Origin">
+                        <group string="Contact &amp; Address">
+                            <field name="mobile_number" required="1"/>
+                            <field name="email" placeholder="Optional – used for approval notification"/>
                             <field name="district" required="1"/>
                             <field name="village" required="1"/>
-                            <field name="tribe"/>
-                            <field name="clan"/>
-                            <field name="occupation"/>
-                            <field name="citizenship_type" required="1"/>
                         </group>
                     </group>
 
                     <group string="Documents" colspan="2">
-                        <field name="applicant_photo" widget="image" class="oe_avatar"/>
-                        <field name="lc_letter" filename="lc_letter_filename"/>
+                        <field name="applicant_photo" widget="image" class="oe_avatar" string="Passport Photo"/>
+                        <field name="lc_letter" filename="lc_letter_filename" string="LC Reference Letter"/>
+                        <field name="lc_letter_filename" invisible="1"/>
                     </group>
 
                     <group string="Rejection Information" invisible="state != 'rejected'">
@@ -95,14 +104,15 @@
                     </group>
                 </sheet>
 
+                <!-- Chatter: shows approver log only – no activity noise -->
                 <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
                     <field name="message_ids"/>
                 </div>
             </form>
         </field>
     </record>
 
+    <!-- Search View -->
     <record id="view_national_id_search" model="ir.ui.view">
         <field name="name">national.id.search</field>
         <field name="model">national.id</field>
@@ -112,14 +122,16 @@
                 <field name="id_number"/>
                 <field name="district"/>
                 <field name="mobile_number"/>
-                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
-                <filter name="stage1" string="Stage 1" domain="[('state', '=', 'stage1')]"/>
-                <filter name="stage2" string="Stage 2" domain="[('state', '=', 'stage2')]"/>
-                <filter name="approved" string="Approved" domain="[('state', '=', 'approved')]"/>
+                <filter name="draft"    string="Draft"    domain="[('state','=','draft')]"/>
+                <filter name="stage1"   string="Stage 1"  domain="[('state','=','stage1')]"/>
+                <filter name="stage2"   string="Stage 2"  domain="[('state','=','stage2')]"/>
+                <filter name="approved" string="Approved" domain="[('state','=','approved')]"/>
+                <filter name="rejected" string="Rejected" domain="[('state','=','rejected')]"/>
             </search>
         </field>
     </record>
 
+    <!-- Action -->
     <record id="action_national_id_application" model="ir.actions.act_window">
         <field name="name">National ID Applications</field>
         <field name="res_model">national.id</field>
@@ -127,7 +139,7 @@
         <field name="search_view_id" ref="view_national_id_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a new National ID Application
+                No applications yet. Applicants can apply at /apply_national_id
             </p>
         </field>
     </record>

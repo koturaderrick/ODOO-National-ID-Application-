@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Sequence -->
     <record id="seq_national_id" model="ir.sequence">
         <field name="name">National ID Application Sequence</field>
         <field name="code">national.id.seq</field>
-        <field name="prefix">NIRA/</field>
         <field name="padding">6</field>
     </record>
 
-    <!-- List View -->
+    <!-- LIST VIEW -->
     <record id="view_national_id_list" model="ir.ui.view">
         <field name="name">national.id.list</field>
         <field name="model">national.id</field>
@@ -20,128 +18,105 @@
                 <field name="sex"/>
                 <field name="date_of_birth"/>
                 <field name="district"/>
-                <field name="mobile_number"/>
                 <field name="state" widget="badge"
-                       decoration-info="state == 'draft'"
-                       decoration-warning="state in ['stage1','stage2']"
+                       decoration-info="state == 'submitted'"
                        decoration-success="state == 'approved'"
                        decoration-danger="state == 'rejected'"/>
-            </list>
-        </field>
-    </record>
+                </list>
+            </field>
+        </record>
 
-    <!-- Form View -->
-    <record id="view_national_id_form" model="ir.ui.view">
-        <field name="name">national.id.form</field>
-        <field name="model">national.id</field>
-        <field name="arch" type="xml">
-            <form string="National ID Application">
-                <header>
-                    <button name="action_submit_to_stage1"
-                            string="Submit to Stage 1"
-                            type="object"
-                            class="btn-primary"
-                            invisible="state not in ['draft']"/>
+        <!-- FORM VIEW -->
+        <record id="view_national_id_form" model="ir.ui.view">
+            <field name="name">national.id.form</field>
+            <field name="model">national.id</field>
+            <field name="arch" type="xml">
+                <form string="National ID Application">
+                    <header>
+                        <button name="action_approve"
+                                string="Approve"
+                                type="object"
+                                class="btn-success"
+                                invisible="state != 'submitted'"/>
+                        <button name="action_reject"
+                                string="Reject"
+                                type="object"
+                                class="btn-danger"
+                                invisible="state != 'submitted'"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="submitted,approved,rejected"/>
+                        </header>
 
-                    <button name="action_verify_documents"
-                            string="Stage 1: Verify &amp; Approve"
-                            type="object"
-                            class="btn-warning"
-                            invisible="state != 'stage1'"/>
+                        <sheet>
+                            <div class="oe_title">
+                                <h1><field name="full_name" readonly="1"/></h1>
+                                <h4><field name="id_number" readonly="1"/></h4>
+                            </div>
 
-                    <button name="action_final_approve"
-                            string="Stage 2: Final Approve"
-                            type="object"
-                            class="btn-success"
-                            invisible="state != 'stage2'"/>
+                            <field name="applicant_photo" widget="image" class="oe_avatar"/>
 
-                    <button name="action_reject"
-                            string="Reject"
-                            type="object"
-                            class="btn-danger"
-                            invisible="state in ['approved', 'rejected', 'draft']"/>
+                            <group>
+                                <group string="Personal Information">
+                                    <field name="surname" required="1"/>
+                                    <field name="given_name" required="1"/>
+                                    <field name="date_of_birth" required="1"/>
+                                    <field name="sex" required="1"/>
+                                    <field name="mobile_number" required="1"/>
+                                    <field name="citizenship_type" required="1"/>
+                                </group>
+                                <group string="Address and Origin">
+                                    <field name="district" required="1"/>
+                                    <field name="village" required="1"/>
+                                </group>
+                            </group>
 
-                    <button name="action_reset_to_draft"
-                            string="Reset to Draft"
-                            type="object"
-                            class="btn-secondary"
-                            invisible="state != 'rejected'"/>
+                            <group string="Documents">
+                                <field name="lc_letter" filename="lc_letter_filename" string="LC Reference Letter"/>
+                                <field name="lc_letter_filename" invisible="1"/>
+                            </group>
 
-                    <field name="state" widget="statusbar"
-                           statusbar_visible="draft,stage1,stage2,approved"/>
-                </header>
+                            <group string="Rejection Reason" invisible="state != 'rejected'">
+                                <field name="rejection_reason" readonly="1" nolabel="1"/>
+                            </group>
+                        </sheet>
 
-                <sheet>
-                    <div class="oe_title">
-                        <h1><field name="full_name" readonly="1"/></h1>
-                        <h4><field name="id_number" readonly="1"/></h4>
-                    </div>
+                        <div class="oe_chatter">
+                            <field name="message_ids"/>
+                        </div>
+                    </form>
+                </field>
+            </record>
 
-                    <group>
-                        <group string="Personal Information">
-                            <field name="surname" required="1"/>
-                            <field name="given_name" required="1"/>
-                            <field name="date_of_birth" required="1"/>
-                            <field name="sex" required="1"/>
-                            <field name="citizenship_type" required="1"/>
-                        </group>
-                        <group string="Contact &amp; Address">
-                            <field name="mobile_number" required="1"/>
-                            <field name="email" placeholder="Optional – used for approval notification"/>
-                            <field name="district" required="1"/>
-                            <field name="village" required="1"/>
-                        </group>
-                    </group>
+            <!-- SEARCH VIEW -->
+            <record id="view_national_id_search" model="ir.ui.view">
+                <field name="name">national.id.search</field>
+                <field name="model">national.id</field>
+                <field name="arch" type="xml">
+                    <search>
+                        <field name="full_name"/>
+                        <field name="id_number"/>
+                        <field name="district"/>
+                        <field name="mobile_number"/>
+                        <filter name="submitted" string="Pending" domain="[('state', '=', 'submitted')]"/>
+                        <filter name="approved" string="Approved" domain="[('state', '=', 'approved')]"/>
+                        <filter name="rejected" string="Rejected" domain="[('state', '=', 'rejected')]"/>
+                        <filter name="group_state" string="Group by Status" context="{'group_by': 'state'}"/>
+                        <filter name="group_district" string="Group by District" context="{'group_by': 'district'}"/>
+                    </search>
+                </field>
+            </record>
 
-                    <group string="Documents" colspan="2">
-                        <field name="applicant_photo" widget="image" class="oe_avatar" string="Passport Photo"/>
-                        <field name="lc_letter" filename="lc_letter_filename" string="LC Reference Letter"/>
-                        <field name="lc_letter_filename" invisible="1"/>
-                    </group>
+            <!-- ACTION -->
+            <record id="action_national_id_application" model="ir.actions.act_window">
+                <field name="name">National ID Applications</field>
+                <field name="res_model">national.id</field>
+                <field name="view_mode">list,form</field>
+                <field name="search_view_id" ref="view_national_id_search"/>
+                <field name="help" type="html">
+                    <p class="o_view_nocontent_smiling_face">
+                        No applications yet. Submit from the website portal or create one here.
+                    </p>
+                </field>
+            </record>
 
-                    <group string="Rejection Information" invisible="state != 'rejected'">
-                        <field name="rejection_reason" readonly="1"/>
-                    </group>
-                </sheet>
-
-                <!-- Chatter: shows approver log only – no activity noise -->
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
-            </form>
-        </field>
-    </record>
-
-    <!-- Search View -->
-    <record id="view_national_id_search" model="ir.ui.view">
-        <field name="name">national.id.search</field>
-        <field name="model">national.id</field>
-        <field name="arch" type="xml">
-            <search>
-                <field name="full_name"/>
-                <field name="id_number"/>
-                <field name="district"/>
-                <field name="mobile_number"/>
-                <filter name="draft"    string="Draft"    domain="[('state','=','draft')]"/>
-                <filter name="stage1"   string="Stage 1"  domain="[('state','=','stage1')]"/>
-                <filter name="stage2"   string="Stage 2"  domain="[('state','=','stage2')]"/>
-                <filter name="approved" string="Approved" domain="[('state','=','approved')]"/>
-                <filter name="rejected" string="Rejected" domain="[('state','=','rejected')]"/>
-            </search>
-        </field>
-    </record>
-
-    <!-- Action -->
-    <record id="action_national_id_application" model="ir.actions.act_window">
-        <field name="name">National ID Applications</field>
-        <field name="res_model">national.id</field>
-        <field name="view_mode">list,form</field>
-        <field name="search_view_id" ref="view_national_id_search"/>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                No applications yet. Applicants can apply at /apply_national_id
-            </p>
-        </field>
-    </record>
-
-</odoo>
+        </odoo>

@@ -5,7 +5,7 @@ from odoo.http import request, Response
 
 class NationalIdController(http.Controller):
 
-    # ── Public application form ───────────────────────────────────────────────
+    # Public application form
 
     @http.route('/apply_national_id', type='http', auth='public', website=True, sitemap=False)
     def id_form(self, **post):
@@ -40,19 +40,20 @@ class NationalIdController(http.Controller):
 
         return request.render('National_Id_application.apply_form_template')
 
-    # ── LC Letter viewer (backend button opens this in a new tab) ────────────
+    # LC Letter viewer 
 
     @http.route('/national_id/lc_letter/<int:record_id>', type='http', auth='user')
     def view_lc_letter(self, record_id, **kwargs):
         """Serve the LC letter binary so it opens in the browser."""
         record = request.env['national.id'].browse(record_id)
         if not record.exists() or not record.lc_letter:
+            
             return Response('LC Letter not found.', status=404)
 
         file_data = base64.b64decode(record.lc_letter)
         filename = record.lc_letter_filename or 'lc_letter'
 
-        # Determine content type from filename extension
+        # Determine filename extension
         if filename.lower().endswith('.pdf'):
             content_type = 'application/pdf'
         elif filename.lower().endswith('.png'):

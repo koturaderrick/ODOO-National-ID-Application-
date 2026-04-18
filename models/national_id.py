@@ -8,7 +8,7 @@ class NationalId(models.Model):
     _rec_name = 'full_name'
     _order = 'create_date desc'
 
-    # USER INPUT FIELDS 
+    # user input fields
     surname = fields.Char(string='Surname', required=True, tracking=True)
     given_name = fields.Char(string='Given Name', required=True, tracking=True)
     full_name = fields.Char(string='Full Name', compute='_compute_full_name', store=True)
@@ -31,7 +31,7 @@ class NationalId(models.Model):
     lc_letter = fields.Binary(string='LC Reference Letter', attachment=True)
     lc_letter_filename = fields.Char(string='Letter Filename')
 
-    # SYSTEM FIELDS
+    # sytem fields
     id_number = fields.Char(string='Application ID', readonly=True, copy=False)
     state = fields.Selection([
         ('submitted', 'Submitted'),
@@ -50,7 +50,7 @@ class NationalId(models.Model):
         for vals in vals_list:
             if not vals.get('id_number') or vals.get('id_number') == 'New':
                 seq = self.env['ir.sequence'].next_by_code('national.id.seq') or '000001'
-                vals['id_number'] = f'NIRA/{seq}'
+                vals['id_number'] = f'{seq}'
         return super().create(vals_list)
 
     def action_approve(self):

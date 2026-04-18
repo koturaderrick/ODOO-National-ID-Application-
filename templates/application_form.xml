@@ -13,7 +13,7 @@
                 <form action="/apply_national_id" method="post" enctype="multipart/form-data" class="card p-4 shadow-sm">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
-                    <!-- PERSONAL INFORMATION (fields 1–6) -->
+                    <!-- PERSONAL Information -->
                     <h5 class="mb-3 border-bottom pb-2">Personal Information</h5>
                     <div class="row mb-3">
                         <div class="col-md-6">
@@ -57,7 +57,7 @@
                         </div>
                     </div>
 
-                    <!-- ADDRESS (fields 7–8) -->
+                    <!-- Address -->
                     <h5 class="mb-3 border-bottom pb-2 mt-4">Address and Origin</h5>
                     <div class="row mb-3">
                         <div class="col-md-6">
@@ -70,7 +70,7 @@
                         </div>
                     </div>
 
-                    <!-- DOCUMENTS (fields 9–10) -->
+                    <!-- documents -->
                     <h5 class="mb-3 border-bottom pb-2 mt-4">Documents</h5>
                     <div class="row mb-3">
                         <div class="col-md-6">

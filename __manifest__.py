@@ -1,6 +1,6 @@
 {
     'name': 'National ID Registration Module',
-    'version': '1.2',
+    'version': '1.0',
     'category': 'Registration',
     'summary': 'Online National ID Application with Workflow and Notifications',
     'author': 'Kotura Derrick Amu',

@@ -5,7 +5,7 @@ from odoo.http import request, Response
 
 class NationalIdController(http.Controller):
 
-    # Public application form
+    # application form
 
     @http.route('/apply_national_id', type='http', auth='public', website=True, sitemap=False)
     def id_form(self, **post):
@@ -53,7 +53,7 @@ class NationalIdController(http.Controller):
         file_data = base64.b64decode(record.lc_letter)
         filename = record.lc_letter_filename or 'lc_letter'
 
-        # Determine filename extension
+        # filename extension
         if filename.lower().endswith('.pdf'):
             content_type = 'application/pdf'
         elif filename.lower().endswith('.png'):

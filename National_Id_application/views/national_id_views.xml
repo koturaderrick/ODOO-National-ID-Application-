@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="seq_national_id" model="ir.sequence">
+        <field name="name">National ID Application Sequence</field>
+        <field name="code">national.id.seq</field>
+        <field name="padding">6</field>
+    </record>
+
+    <!-- LIST VIEW -->
+    <record id="view_national_id_list" model="ir.ui.view">
+        <field name="name">national.id.list</field>
+        <field name="model">national.id</field>
+        <field name="arch" type="xml">
+            <list string="National ID Applications">
+                <field name="id_number" string="App ID"/>
+                <field name="full_name"/>
+                <field name="sex"/>
+                <field name="date_of_birth"/>
+                <field name="district"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'submitted'"
+                       decoration-success="state == 'approved'"
+                       decoration-danger="state == 'rejected'"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- FORM VIEW -->
+        <record id="view_national_id_form" model="ir.ui.view">
+            <field name="name">national.id.form</field>
+            <field name="model">national.id</field>
+            <field name="arch" type="xml">
+                <form string="National ID Application">
+                    <header>
+                        <button name="action_approve"
+                                string="Approve"
+                                type="object"
+                                class="btn-success"
+                                invisible="state != 'submitted'"/>
+                        <button name="action_reject"
+                                string="Reject"
+                                type="object"
+                                class="btn-danger"
+                                invisible="state != 'submitted'"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="submitted,approved,rejected"/>
+                        </header>
+
+                        <sheet>
+                            <div class="oe_title">
+                                <h1><field name="full_name" readonly="1"/></h1>
+                                <h4><field name="id_number" readonly="1"/></h4>
+                            </div>
+
+                            <field name="applicant_photo" widget="image" class="oe_avatar"/>
+
+                            <group>
+                                <group string="Personal Information">
+                                    <field name="surname" required="1"/>
+                                    <field name="given_name" required="1"/>
+                                    <field name="date_of_birth" required="1"/>
+                                    <field name="sex" required="1"/>
+                                    <field name="mobile_number" required="1"/>
+                                    <field name="citizenship_type" required="1"/>
+                                </group>
+                                <group string="Address and Origin">
+                                    <field name="district" required="1"/>
+                                    <field name="village" required="1"/>
+                                </group>
+                            </group>
+
+                            <group string="Documents">
+                                <field name="lc_letter" filename="lc_letter_filename" string="LC Reference Letter"/>
+                                <field name="lc_letter_filename" invisible="1"/>
+                            </group>
+
+                            <group string="Rejection Reason" invisible="state != 'rejected'">
+                                <field name="rejection_reason" readonly="1" nolabel="1"/>
+                            </group>
+                        </sheet>
+
+                        <div class="oe_chatter">
+                            <field name="message_ids"/>
+                        </div>
+                    </form>
+                </field>
+            </record>
+
+            <!-- SEARCH VIEW -->
+            <record id="view_national_id_search" model="ir.ui.view">
+                <field name="name">national.id.search</field>
+                <field name="model">national.id</field>
+                <field name="arch" type="xml">
+                    <search>
+                        <field name="full_name"/>
+                        <field name="id_number"/>
+                        <field name="district"/>
+                        <field name="mobile_number"/>
+                        <filter name="submitted" string="Pending" domain="[('state', '=', 'submitted')]"/>
+                        <filter name="approved" string="Approved" domain="[('state', '=', 'approved')]"/>
+                        <filter name="rejected" string="Rejected" domain="[('state', '=', 'rejected')]"/>
+                        <filter name="group_state" string="Group by Status" context="{'group_by': 'state'}"/>
+                        <filter name="group_district" string="Group by District" context="{'group_by': 'district'}"/>
+                    </search>
+                </field>
+            </record>
+
+            <!-- ACTION -->
+            <record id="action_national_id_application" model="ir.actions.act_window">
+                <field name="name">National ID Applications</field>
+                <field name="res_model">national.id</field>
+                <field name="view_mode">list,form</field>
+                <field name="search_view_id" ref="view_national_id_search"/>
+                <field name="help" type="html">
+                    <p class="o_view_nocontent_smiling_face">
+                        No applications yet. Submit from the website portal or create one here.
+                    </p>
+                </field>
+            </record>
+
+        </odoo>

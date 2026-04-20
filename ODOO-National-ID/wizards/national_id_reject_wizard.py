@@ -12,8 +12,7 @@ class NationalIdRejectWizard(models.TransientModel):
         record = self.national_id_id
         record.state = 'rejected'
         record.rejection_reason = self.rejection_reason
-        record._append_log(
-            record,
-            f'REJECTED by {self.env.user.name} — Reason: {self.rejection_reason}'
+        record.message_post(
+            body=f'REJECTED by {self.env.user.name} — Reason: {self.rejection_reason}'
         )
         return {'type': 'ir.actions.act_window_close'}

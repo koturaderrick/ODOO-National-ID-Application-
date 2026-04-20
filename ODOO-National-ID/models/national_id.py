@@ -64,5 +64,5 @@ class NationalId(models.Model):
             'res_model': 'national.id.reject.wizard',
             'view_mode': 'form',
             'target': 'new',
-            'context': {'default_application_id': self.id},
+            'context': {'default_national_id_id': self.id},
         }

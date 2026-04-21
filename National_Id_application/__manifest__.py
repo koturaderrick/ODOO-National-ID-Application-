@@ -4,7 +4,7 @@
     'category': 'Registration',
     'summary': 'Online National ID Application with Workflow and Notifications',
     'author': 'Kotura Derrick Amu',
-    'depends': ['base', 'website', ],
+    'depends': ['base', 'website', 'mail'],
     'data': [
         'security/ir.model.access.csv',
         'views/national_id_views.xml',

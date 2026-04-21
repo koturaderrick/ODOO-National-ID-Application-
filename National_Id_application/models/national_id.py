@@ -6,6 +6,7 @@ class NationalId(models.Model):
     _name = 'national.id'
     _description = 'National ID Registration'
     _rec_name = 'full_name'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
 
     # user input fields

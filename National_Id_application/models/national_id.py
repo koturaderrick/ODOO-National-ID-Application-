@@ -1,24 +1,24 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
+
 class NationalId(models.Model):
     _name = 'national.id'
     _description = 'National ID Registration'
-    _inherit = ['mail.thread']
     _rec_name = 'full_name'
     _order = 'create_date desc'
 
     # user input fields
-    surname = fields.Char(string='Surname', required=True, tracking=True)
-    given_name = fields.Char(string='Given Name', required=True, tracking=True)
+    surname = fields.Char(string='Surname', required=True)
+    given_name = fields.Char(string='Given Name', required=True)
     full_name = fields.Char(string='Full Name', compute='_compute_full_name', store=True)
-    date_of_birth = fields.Date(string='Date of Birth', required=True, tracking=True)
+    date_of_birth = fields.Date(string='Date of Birth', required=True)
     sex = fields.Selection(
         [('male', 'Male'), ('female', 'Female')],
-        string='Sex', required=True, tracking=True
+        string='Sex', required=True
     )
     mobile_number = fields.Char(string='Mobile Number', required=True)
-    district = fields.Char(string='District', required=True, tracking=True)
+    district = fields.Char(string='District', required=True)
     village = fields.Char(string='Village', required=True)
     citizenship_type = fields.Selection([
         ('birth', 'By Birth'),
@@ -31,13 +31,13 @@ class NationalId(models.Model):
     lc_letter = fields.Binary(string='LC Reference Letter', attachment=True)
     lc_letter_filename = fields.Char(string='Letter Filename')
 
-    # sytem fields
+    # system fields
     id_number = fields.Char(string='Application ID', readonly=True, copy=False)
     state = fields.Selection([
         ('submitted', 'Submitted'),
         ('approved', 'Approved'),
         ('rejected', 'Rejected'),
-    ], default='submitted', string='Status', tracking=True)
+    ], default='submitted', string='Status')
     rejection_reason = fields.Text(string='Rejection Reason', readonly=True)
 
     @api.depends('surname', 'given_name')
@@ -56,7 +56,6 @@ class NationalId(models.Model):
     def action_approve(self):
         for record in self:
             record.state = 'approved'
-            record.message_post(body=f"✔ Application approved by {self.env.user.name}")
 
     def action_reject(self):
         return {

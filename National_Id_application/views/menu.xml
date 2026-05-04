@@ -1,11 +1,11 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
     <menuitem
         id="menu_national_id_root"
         name="National ID"
         sequence="10"
-        />
+        groups="National_Id_application.group_nira_user"/>
 
     <menuitem
         id="menu_national_id_applications"
@@ -13,6 +13,6 @@
         parent="menu_national_id_root"
         action="action_national_id_application"
         sequence="10"
-        />
+        groups="National_Id_application.group_nira_user"/>
 
-    </odoo>
+</odoo>

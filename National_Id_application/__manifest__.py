@@ -1,12 +1,15 @@
 {
     'name': 'National ID Registration Module',
-    'version': '1.0',
+    'version': '1.4',
     'category': 'Registration',
-    'summary': 'Online National ID Application with Workflow and Notifications',
+    'summary': 'National ID Application ',
     'author': 'Kotura Derrick Amu',
+    'license': 'LGPL-3',
     'depends': ['base', 'website', 'mail'],
     'data': [
+        'security/groups.xml',
         'security/ir.model.access.csv',
+        'security/record_rules.xml',
         'views/national_id_views.xml',
         'views/menu.xml',
         'wizards/national_id_reject_wizard_view.xml',

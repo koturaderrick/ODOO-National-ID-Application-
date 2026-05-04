@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- nira user can only read,write,create their record.-->
+    <record id="rule_nira_user_own" model="ir.rule">
+        <field name="name">NIRA User: own records only</field>
+        <field name="model_id" ref="model_national_id"/>
+        <field name="groups" eval="[(4, ref('group_nira_user'))]"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="perm_read"   eval="True"/>
+        <field name="perm_write"  eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!--stage 1 verifier unrestricted access to ALL records.-->
+    <record id="rule_nira_stage1_all" model="ir.rule">
+        <field name="name">Stage 1 Verifier: access all records</field>
+        <field name="model_id" ref="model_national_id"/>
+        <field name="groups" eval="[(4, ref('group_nira_stage1'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read"   eval="True"/>
+        <field name="perm_write"  eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!--stage 2 approver unrestricted access to all records.-->
+    <record id="rule_nira_stage2_all" model="ir.rule">
+        <field name="name">Stage 2 Approver: access all records</field>
+        <field name="model_id" ref="model_national_id"/>
+        <field name="groups" eval="[(4, ref('group_nira_stage2'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read"   eval="True"/>
+        <field name="perm_write"  eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!--nira manager gets   full access including delete.-->
+    <record id="rule_nira_manager_all" model="ir.rule">
+        <field name="name">NIRA Manager: full access</field>
+        <field name="model_id" ref="model_national_id"/>
+        <field name="groups" eval="[(4, ref('group_nira_manager'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read"   eval="True"/>
+        <field name="perm_write"  eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+</odoo>

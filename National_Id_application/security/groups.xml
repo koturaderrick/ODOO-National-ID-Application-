@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="module_category_nira" model="ir.module.category">
+            <field name="name">NIRA</field>
+            <field name="description">National Identification and Registration Authority</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <!-- group 1: NIRA User-->
+        <record id="group_nira_user" model="res.groups">
+            <field name="name">NIRA User</field>
+            <field name="category_id" ref="module_category_nira"/>
+            <field name="comment">Can submit new applications and view their own submissions only.</field>
+        </record>
+
+        <!-- roup 2: Stage 1 Verifier — inherits NIRA User -->
+        <record id="group_nira_stage1" model="res.groups">
+            <field name="name">NIRA Stage 1 Verifier</field>
+            <field name="category_id" ref="module_category_nira"/>
+            <field name="implied_ids" eval="[(4, ref('group_nira_user'))]"/>
+            <field name="comment">Can view all submitted applications and approve Stage 1.</field>
+        </record>
+
+        <!-- group 3: Stage 2 Approver — inherits Stage 1 Verifier -->
+        <record id="group_nira_stage2" model="res.groups">
+            <field name="name">NIRA Stage 2 Approver</field>
+            <field name="category_id" ref="module_category_nira"/>
+            <field name="implied_ids" eval="[(4, ref('group_nira_stage1'))]"/>
+            <field name="comment">Can view all applications and grant final approval.</field>
+        </record>
+
+        <!-- group 4: NIRA Manager — full access, inherits Stage 2 -->
+        <record id="group_nira_manager" model="res.groups">
+            <field name="name">NIRA Manager</field>
+            <field name="category_id" ref="module_category_nira"/>
+            <field name="implied_ids" eval="[(4, ref('group_nira_stage2'))]"/>
+            <field name="comment">Full administrative access including delete and reset.</field>
+        </record>
+
+    </data>
+</odoo>
